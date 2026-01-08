@@ -22,3 +22,17 @@ export const registerUser = async (req, res) => {
   }
 }
 
+
+// fetch user data
+export const getUserData = async(req, res) => {
+  try {
+    const userData = await userService.fetchUserData(req.user.uid)
+    if (!userData) return res.status(404).json({message: "User not found"})
+
+    res.json(userData)
+  } catch(err){
+    console.error(err)
+    res.status(500).json({message: "Server error"})
+  }
+}
+

@@ -14,6 +14,12 @@ class UserService {
     await this.userCollection.doc(uid).set({uid, email, role})
     return {uid, email, role}
   }
+
+  async fetchUserData(uid) {
+    const doc = await this.userCollection.doc(uid).get()
+    if (!doc.exists) return null
+    return doc.data()
+  }
 }
 
 export default new UserService()

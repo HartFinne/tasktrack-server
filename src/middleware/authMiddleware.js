@@ -11,6 +11,9 @@ export const authMiddleware = async (req, res, next) => {
 
   try {
     const decodedToken = await auth.verifyIdToken(token);
+    console.log("DECODED TOKEN UID:", decodedToken.uid);
+
+
     req.user = decodedToken; // attach user info to req
     next();
   } catch (err) {
