@@ -1,26 +1,42 @@
-import UserRepository from "../repositories/UserRepository.js";
 import User from "../models/User.js"
 
 export default class UserService {
-  constructor(userServiceRepository = new UserRepository()) {
-    this.userServiceRepository = userServiceRepository
-  }
-
-  // search if user exists in firestorage
+  
+  // Check if user exist only returning boolean
   async userExist(uid) {
-    const user = await this.userServiceRepository.getById(uid);
-    return !!user;
+    const existingUser = await User.getById(uid)
+    return !!existingUser
   }
 
-  // create a use in firestorage
-  async createUser({uid, email, role = "employee"}) {
-    const user = new User({ uid, email, role });
-    console.log(user)
-    return await this.userServiceRepository.create(user);
+  // register a use in firebase
+  async createUser({ uid, email, role = "employee"}) {
+    // Validation
+    if (!uid || !email) {
+      throw new Error("UID and email are required")
+    }
+
+    // Sanitization
+    const sanitizedEmail = email.trim().toLowerCase()
+
+    // Check if user already exists
+    const exists = await this.userExist(uid)
+    if(exists) {
+      throw new Error("User already exists")
+    }
+
+    // Create user model
+    const user = new User({
+      uid,
+      email: sanitizedEmail,
+      role
+    })
+
+    // Saving to firestore
+    return await user.save()
   }
 
-  // get user data in firestorage
-  async fetchUserData(uid) {
-    return await this.userServiceRepository.getById(uid)
+  // fetch user data by id
+  async fetchUserByID(uid) {
+    return await User.getById(uid)
   }
 }
