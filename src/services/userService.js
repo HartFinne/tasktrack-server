@@ -1,25 +1,26 @@
-import {db} from "../config/firebase.js"
+import UserRepository from "../repositories/UserRepository.js";
+import User from "../models/User.js"
 
-class UserService {
-  constructor() {
-    this.userCollection = db.collection("users")
+export default class UserService {
+  constructor(userServiceRepository = new UserRepository()) {
+    this.userServiceRepository = userServiceRepository
   }
 
+  // search if user exists in firestorage
   async userExist(uid) {
-    const doc = await this.userCollection.doc(uid).get()
-    return doc.exists
+    const user = await this.userServiceRepository.getById(uid);
+    return !!user;
   }
 
+  // create a use in firestorage
   async createUser({uid, email, role = "employee"}) {
-    await this.userCollection.doc(uid).set({uid, email, role})
-    return {uid, email, role}
+    const user = new User({ uid, email, role });
+    console.log(user)
+    return await this.userServiceRepository.create(user);
   }
 
+  // get user data in firestorage
   async fetchUserData(uid) {
-    const doc = await this.userCollection.doc(uid).get()
-    if (!doc.exists) return null
-    return doc.data()
+    return await this.userServiceRepository.getById(uid)
   }
 }
-
-export default new UserService()
