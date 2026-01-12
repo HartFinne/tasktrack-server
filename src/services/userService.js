@@ -1,7 +1,7 @@
 import User from "../models/User.js"
 
 export default class UserService {
-  
+
   // Check if user exist only returning boolean
   async userExist(uid) {
     const existingUser = await User.getById(uid)
@@ -9,7 +9,7 @@ export default class UserService {
   }
 
   // register a use in firebase
-  async createUser({ uid, email, role = "employee"}) {
+  async createUser({ uid, email, role = "employee" }) {
     // Validation
     if (!uid || !email) {
       throw new Error("UID and email are required")
@@ -20,7 +20,7 @@ export default class UserService {
 
     // Check if user already exists
     const exists = await this.userExist(uid)
-    if(exists) {
+    if (exists) {
       throw new Error("User already exists")
     }
 
