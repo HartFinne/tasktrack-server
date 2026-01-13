@@ -17,7 +17,7 @@ app.get("/users", (req, res) => {
 })
 
 app.use("/users", userRoutes)
-app.use("/task", taskRoute)
+app.use(taskRoute)
 
 
 

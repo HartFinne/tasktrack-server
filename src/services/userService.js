@@ -43,6 +43,6 @@ export default class UserService {
 
   // fetch all users
   async fetchAllUsers() {
-    return await User.getAllUsers()
+    return await User.getAll()
   }
 }

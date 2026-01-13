@@ -13,6 +13,10 @@ const taskService = new TaskService()
 const taskController = TaskController(taskService)
 
 // Protected route
+// this route to create a new task
 router.post("/task", authMiddleware, adminMiddleware, taskController.createTask)
+
+// this route to get all tasks
+router.get("/tasks", authMiddleware, adminMiddleware, taskController.getAllTasks)
 
 export default router;

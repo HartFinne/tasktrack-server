@@ -1,5 +1,4 @@
 import Task from "../models/Task.js"
-import User from "../models/User.js"
 
 export default class UserService {
 
@@ -29,5 +28,9 @@ export default class UserService {
     })
 
     return await task.save()
+  }
+
+  async fetchAllTasks() {
+    return await Task.getAll()
   }
 }

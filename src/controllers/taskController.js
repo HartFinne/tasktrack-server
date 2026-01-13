@@ -9,9 +9,17 @@ export const TaskController = (taskService) => {
       } catch (error) {
         return res.status(400).json({ message: error.message })
       }
+    },
+
+    // get all tasks
+    getAllTasks: async (req, res) => {
+      try {
+        const tasks = await taskService.fetchAllTasks()
+        return res.status(200).json(tasks)
+      } catch (error) {
+        console.error("Error fetching tasks", error)
+        return res.status(500).json({ message: error.message })
+      }
     }
-
-
-    // get users
   }
 }

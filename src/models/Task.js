@@ -27,4 +27,15 @@ export default class Task {
     return this
   }
 
+  static async getAll() {
+    const snapshot = await Task.collection().get()
+
+    const tasks = []
+    snapshot.forEach(doc => {
+      tasks.push(new Task(doc.data()))
+    })
+
+    return tasks
+  }
+
 }
