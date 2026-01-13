@@ -24,6 +24,17 @@ export const UserController = (userService) => {
         console.error(error)
         res.status(500).json({ message: error.message })
       }
+    },
+
+    // 
+    getAllUsers: async (req, res) => {
+      try {
+        const users = await userService.fetchAllUsers()
+        return res.status(200).json(users)
+      } catch (error) {
+        console.error("Error fetching users: ", error)
+        return res.status(500).json({ message: error.message })
+      }
     }
   }
 

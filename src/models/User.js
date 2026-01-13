@@ -27,4 +27,16 @@ export default class User {
     return this
   }
 
+  // get all users from the collection
+  static async getAll() {
+    const snapshot = await User.collection().get()
+
+    const users = []
+    snapshot.forEach(doc => {
+      users.push(new User(doc.data()))
+    })
+
+    return users
+  }
+
 }

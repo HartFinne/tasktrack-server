@@ -39,4 +39,10 @@ export default class UserService {
   async fetchUserByID(uid) {
     return await User.getById(uid)
   }
+
+
+  // fetch all users
+  async fetchAllUsers() {
+    return await User.getAllUsers()
+  }
 }
