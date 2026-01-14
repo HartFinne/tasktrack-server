@@ -24,7 +24,8 @@ export default class Task {
       description: this.description,
       status: this.status,
       assignedTo: this.assignedTo,
-      assignedEmail: this.assignedEmail
+      assignedEmail: this.assignedEmail,
+      createdAt: admin.firestore.FieldValue.serverTimestamp()
     })
     return this
   }
