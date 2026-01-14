@@ -30,8 +30,16 @@ export default class UserService {
     return await task.save()
   }
 
-  async fetchAllTasks(limit = 5, page = 1) {
-    return await Task.getAll(limit, page)
+  async fetchAllTasks(limit, lastDoc) {
+    return await Task.getAll(limit, lastDoc)
+  }
+
+  // for pagination returns a snapshot
+  async fetchTaskDocByUid(uid) {
+    const docRef = Task.collection().doc(uid)
+    const snapshot = await docRef.get()
+    console.log(snapshot)
+    return snapshot.exists ? snapshot : null
   }
 
 }

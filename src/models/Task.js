@@ -1,13 +1,14 @@
-import { db } from "../config/firebase.js"
+import { db, admin } from "../config/firebase.js"
 
 export default class Task {
-  constructor({ uid, title, description, status, assignedTo, assignedEmail }) {
+  constructor({ uid, title, description, status, assignedTo, assignedEmail, createdAt }) {
     this.uid = uid
     this.title = title
     this.description = description
     this.status = status
     this.assignedTo = assignedTo
     this.assignedEmail = assignedEmail
+    this.createdAt = createdAt
   }
 
   static collection() {
@@ -28,22 +29,25 @@ export default class Task {
     return this
   }
 
-  static async getAll(limit, page) {
-    const snapshot = await Task.collection()
-      .orderBy("title")       // optional: order tasks consistently
-      .offset((page - 1) * limit)  // Firestore offset
-      .limit(limit)
-      .get();
+  static async getAll(limit, lastDoc) {
+    let query = Task.collection().orderBy("createdAt").limit(limit)
 
-    const tasks = [];
+    if (lastDoc) {
+      query = query.startAfter(lastDoc)
+    }
+
+    const snapshot = await query.get()
+
+
+    const tasks = []
     snapshot.forEach(doc => {
-      tasks.push(new Task({
-        uid: doc.id,
-        ...doc.data()
-      }));
-    });
+      console.log(doc.data)
+      tasks.push(new Task({ uid: doc.id, ...doc.data() }))
+    })
 
-    return tasks;
+    const lastVisible = snapshot.docs[snapshot.docs.length - 1] || null
+
+    return { tasks, lastVisible }
   }
 
 }

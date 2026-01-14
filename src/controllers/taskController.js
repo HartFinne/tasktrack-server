@@ -15,11 +15,19 @@ export const TaskController = (taskService) => {
     getAllTasks: async (req, res) => {
       try {
         const limit = parseInt(req.query.limit) || 5;
-        const page = parseInt(req.query.page) || 1;
+        const lastUid = req.query.lastUid || null;
 
+        let lastDoc = null
+        if (lastUid) {
+          lastDoc = await taskService.fetchTaskDocByUid(lastUid)
+        }
 
-        const tasks = await taskService.fetchAllTasks(limit, page)
-        return res.status(200).json(tasks)
+        const { tasks, lastVisible } = await taskService.fetchAllTasks(limit, lastDoc)
+
+        return res.status(200).json({
+          tasks,
+          lastUid: lastVisible ? lastVisible.id : null
+        })
       } catch (error) {
         console.error("Error fetching tasks", error)
         return res.status(500).json({ message: error.message })

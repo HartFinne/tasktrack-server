@@ -42,7 +42,15 @@ export default class UserService {
 
 
   // fetch all users
-  async fetchAllUsers(limit, page) {
-    return await User.getAll(limit, page)
+  async fetchAllUsers(limit, lastDoc) {
+    return await User.getAll(limit, lastDoc)
+  }
+
+  // for pagination returns a snapshot
+  async fetchUserDocByUid(uid) {
+    const docRef = User.collection().doc(uid)
+    const snapshot = await docRef.get()
+    console.log(snapshot)
+    return snapshot.exists ? snapshot : null
   }
 }
