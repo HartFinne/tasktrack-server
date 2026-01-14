@@ -42,7 +42,7 @@ export default class UserService {
 
 
   // fetch all users
-  async fetchAllUsers(limit = 10) {
-    return await User.getAll(limit)
+  async fetchAllUsers(limit, page) {
+    return await User.getAll(limit, page)
   }
 }

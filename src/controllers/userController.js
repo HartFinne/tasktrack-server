@@ -29,7 +29,10 @@ export const UserController = (userService) => {
     // 
     getAllUsers: async (req, res) => {
       try {
-        const users = await userService.fetchAllUsers()
+        const limit = parseInt(req.query.limit) || 5;
+        const page = parseInt(req.query.page) || 1;
+
+        const users = await userService.fetchAllUsers(limit, page)
         return res.status(200).json(users)
       } catch (error) {
         console.error("Error fetching users: ", error)

@@ -30,7 +30,8 @@ export default class UserService {
     return await task.save()
   }
 
-  async fetchAllTasks(limit = 10) {
-    return await Task.getAll(limit)
+  async fetchAllTasks(limit = 5, page = 1) {
+    return await Task.getAll(limit, page)
   }
+
 }

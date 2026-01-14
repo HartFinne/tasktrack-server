@@ -14,7 +14,11 @@ export const TaskController = (taskService) => {
     // get all tasks
     getAllTasks: async (req, res) => {
       try {
-        const tasks = await taskService.fetchAllTasks()
+        const limit = parseInt(req.query.limit) || 5;
+        const page = parseInt(req.query.page) || 1;
+
+
+        const tasks = await taskService.fetchAllTasks(limit, page)
         return res.status(200).json(tasks)
       } catch (error) {
         console.error("Error fetching tasks", error)

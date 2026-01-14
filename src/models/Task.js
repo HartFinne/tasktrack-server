@@ -28,19 +28,22 @@ export default class Task {
     return this
   }
 
-  static async getAll(limit) {
-    const snapshot = await Task.collection().limit(limit).get()
+  static async getAll(limit, page) {
+    const snapshot = await Task.collection()
+      .orderBy("title")       // optional: order tasks consistently
+      .offset((page - 1) * limit)  // Firestore offset
+      .limit(limit)
+      .get();
 
-    const tasks = []
+    const tasks = [];
     snapshot.forEach(doc => {
-      console.log(doc.id, "working")
       tasks.push(new Task({
-        uid: doc.id,      // <-- existing document ID
+        uid: doc.id,
         ...doc.data()
-      }))
-    })
+      }));
+    });
 
-    return tasks
+    return tasks;
   }
 
 }

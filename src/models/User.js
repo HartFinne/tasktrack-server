@@ -28,8 +28,11 @@ export default class User {
   }
 
   // get all users from the collection
-  static async getAll(limit) {
-    const snapshot = await User.collection().limit(limit).get()
+  static async getAll(limit, page) {
+    const snapshot = await User.collection()
+      .offset((page - 1) * limit)
+      .limit(limit)
+      .get();
 
     const users = []
     snapshot.forEach(doc => {
