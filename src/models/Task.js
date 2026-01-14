@@ -1,7 +1,8 @@
 import { db } from "../config/firebase.js"
 
 export default class Task {
-  constructor({ title, description, status, assignedTo, assignedEmail }) {
+  constructor({ uid, title, description, status, assignedTo, assignedEmail }) {
+    this.uid = uid
     this.title = title
     this.description = description
     this.status = status
@@ -27,12 +28,16 @@ export default class Task {
     return this
   }
 
-  static async getAll() {
-    const snapshot = await Task.collection().get()
+  static async getAll(limit) {
+    const snapshot = await Task.collection().limit(limit).get()
 
     const tasks = []
     snapshot.forEach(doc => {
-      tasks.push(new Task(doc.data()))
+      console.log(doc.id, "working")
+      tasks.push(new Task({
+        uid: doc.id,      // <-- existing document ID
+        ...doc.data()
+      }))
     })
 
     return tasks
