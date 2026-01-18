@@ -25,14 +25,23 @@ export default class User {
   // create a update for user
 
   // create 1 user data
-  async save() {
-    await User.collection().doc(this.uid).set({
-      uid: this.uid,
-      email: this.email,
-      role: this.role,
-      createdAt: admin.firestore.FieldValue.serverTimestamp()
-    })
-    return this
+  // save user (fails if exists)
+  async saveIfNotExists() {
+    const docRef = User.collection().doc(this.uid);
+    try {
+      await docRef.create({
+        uid: this.uid,
+        email: this.email,
+        role: this.role,
+        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      });
+      return this;
+    } catch (err) {
+      if (err.code === 6 || err.message.includes("already exists")) {
+        throw new Error("User already exists");
+      }
+      throw err;
+    }
   }
 
   // get all users from the collection
