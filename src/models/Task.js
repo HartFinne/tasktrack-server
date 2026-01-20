@@ -51,4 +51,14 @@ export default class Task {
     return { tasks, lastVisible }
   }
 
+
+  static async findById(taskId) {
+    const doc = await Task.collection().doc(taskId).get();
+    return doc.exists ? { id: doc.id, ...doc.data() } : null;
+  }
+
+  static async update(taskId, data) {
+    return Task.collection().doc(taskId).update(data);
+  }
+
 }

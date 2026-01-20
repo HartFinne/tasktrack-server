@@ -32,6 +32,26 @@ export const TaskController = (taskService) => {
         console.error("Error fetching tasks", error)
         return res.status(500).json({ message: error.message })
       }
+    },
+
+    assignTask: async (req, res) => {
+      const { taskId } = req.params
+      const { userId, userEmail } = req.body
+
+      try {
+        const updatedTask = await taskService.assignTask({
+          taskId,
+          userId,
+          userEmail
+        })
+
+        return res.status(200).json({
+          message: "Task successfully assigned",
+          task: updatedTask
+        })
+      } catch (error) {
+        return res.status(400).json({ message: error.message })
+      }
     }
   }
 }

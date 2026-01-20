@@ -1,6 +1,6 @@
 import Task from "../models/Task.js"
 
-export default class UserService {
+export default class TaskService {
 
   // Business logic 
   async createTask({ title, description }) {
@@ -40,6 +40,33 @@ export default class UserService {
     const snapshot = await docRef.get()
     console.log(snapshot)
     return snapshot.exists ? snapshot : null
+  }
+
+  // for assigning task
+  async assignTask({ taskId, userId, userEmail }) {
+    // validation
+    if (!taskId || !userId || !userEmail) {
+      throw new Error("taskId, userId, and userEmail are required")
+    }
+
+
+    const task = await Task.findById(taskId)
+    if (!task) {
+      throw new Error("Task not found")
+    }
+
+    // Service decides WHAT changes
+    await Task.update(taskId, {
+      assignedTo: userId,
+      assignedEmail: userEmail
+    });
+
+    return {
+      taskId,
+      assignedTo: userId,
+      assignedEmail: userEmail
+    };
+
   }
 
 }
