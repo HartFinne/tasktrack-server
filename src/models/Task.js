@@ -61,4 +61,18 @@ export default class Task {
     return Task.collection().doc(taskId).update(data);
   }
 
+
+  static async findTasksByAssignedUser(uid) {
+    const snapshot = await Task.collection()
+      .where("assignedTo", "==", uid)
+      .orderBy("createdAt", "desc")
+      .get()
+
+    const tasks = []
+    snapshot.forEach(doc => {
+      tasks.push(new Task({ uid: doc.id, ...doc.data() }))
+    })
+
+    return tasks
+  }
 }

@@ -34,6 +34,7 @@ export const TaskController = (taskService) => {
       }
     },
 
+    // assign someone to a task
     assignTask: async (req, res) => {
       const { taskId } = req.params
       const { userId, userEmail } = req.body
@@ -51,6 +52,21 @@ export const TaskController = (taskService) => {
         })
       } catch (error) {
         return res.status(400).json({ message: error.message })
+      }
+    },
+
+    // get the user tasks
+    getTasksAssignedToUser: async (req, res) => {
+      try {
+        const { uid } = req.user
+
+        console.log(uid)
+
+        const tasks = await taskService.getTasksAssignedToUser(uid)
+
+        return res.status(200).json({ tasks })
+      } catch (error) {
+        return res.status(500).json({ message: error.message })
       }
     }
   }

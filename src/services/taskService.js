@@ -66,7 +66,16 @@ export default class TaskService {
       assignedTo: userId,
       assignedEmail: userEmail
     };
-
   }
+
+  //
+  async getTasksAssignedToUser(uid) {
+    if (!uid) {
+      throw new Error("User not authenticated")
+    }
+
+    return Task.findTasksByAssignedUser(uid)
+  }
+
 
 }

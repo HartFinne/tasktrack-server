@@ -23,6 +23,6 @@ router.get("/tasks", authMiddleware, adminMiddleware, taskController.getAllTasks
 router.put("/tasks/:taskId/assign", authMiddleware, adminMiddleware, taskController.assignTask)
 
 // this route to is to see the user assign task
-router.get("/tasks/my")
+router.get("/tasks/my", authMiddleware, taskController.getTasksAssignedToUser)
 
 export default router;
