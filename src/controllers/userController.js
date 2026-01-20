@@ -24,6 +24,31 @@ export const UserController = (userService) => {
         console.error(error)
         res.status(500).json({ message: error.message })
       }
+    },
+
+    // 
+    getAllUsers: async (req, res) => {
+      try {
+        const limit = parseInt(req.query.limit) || 5;
+        const lastUid = req.query.lastUid || null;
+
+        let lastDoc = null
+
+        if (lastUid) {
+          lastDoc = await userService.fetchUserDocByUid(lastUid)
+        }
+
+        const { users, lastVisible } = await userService.fetchAllUsers(limit, lastDoc)
+
+
+        return res.status(200).json({
+          users,
+          lastUid: lastVisible ? lastVisible.id : null
+        })
+      } catch (error) {
+        console.error("Error fetching users: ", error)
+        return res.status(500).json({ message: error.message })
+      }
     }
   }
 
