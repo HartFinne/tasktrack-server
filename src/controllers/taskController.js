@@ -68,6 +68,28 @@ export const TaskController = (taskService) => {
       } catch (error) {
         return res.status(500).json({ message: error.message })
       }
+    },
+
+    // to change the status of a task
+    updateTaskStatus: async (req, res) => {
+      try {
+        const { taskId } = req.params
+        const { status } = req.body
+        const { uid } = req.user
+
+        const task = await taskService.updateTaskStatus({
+          taskId,
+          status,
+          uid
+        })
+
+        return res.status(200).json({
+          message: "Task status updated",
+          task
+        })
+      } catch (error) {
+        return res.status(403).json({ message: error.message })
+      }
     }
   }
 }

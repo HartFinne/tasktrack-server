@@ -49,13 +49,11 @@ export default class TaskService {
       throw new Error("taskId, userId, and userEmail are required")
     }
 
-
     const task = await Task.findById(taskId)
     if (!task) {
       throw new Error("Task not found")
     }
 
-    // Service decides WHAT changes
     await Task.update(taskId, {
       assignedTo: userId,
       assignedEmail: userEmail
@@ -75,6 +73,36 @@ export default class TaskService {
     }
 
     return Task.findTasksByAssignedUser(uid)
+  }
+
+
+  async updateTaskStatus({ taskId, status, uid }) {
+
+    if (!taskId || !status) {
+      throw new Error("taskId and status are required")
+    }
+
+    const allowedStatuses = ["backlog", "in_progress", "done"]
+    if (!allowedStatuses.includes(status)) {
+      throw new Error("Invalid task status")
+    }
+
+    const task = await Task.findById(taskId)
+    if (!task) {
+      throw new Error("Task not found")
+    }
+
+    if (task.assignedTo !== uid) {
+      throw new Error("You can only update your own task")
+    }
+
+
+    await Task.update(taskId, { status })
+
+    return {
+      taskId,
+      status
+    }
   }
 
 

@@ -25,4 +25,7 @@ router.put("/tasks/:taskId/assign", authMiddleware, adminMiddleware, taskControl
 // this route to is to see the user assign task
 router.get("/tasks/my", authMiddleware, taskController.getTasksAssignedToUser)
 
+// this route to change the status of a task
+router.put("/tasks/:taskId/status", authMiddleware, taskController.updateTaskStatus)
+
 export default router;
