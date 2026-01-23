@@ -54,7 +54,8 @@ export default class Task {
 
   static async findById(taskId) {
     const doc = await Task.collection().doc(taskId).get();
-    return doc.exists ? { id: doc.id, ...doc.data() } : null;
+    console.log(doc)
+    return doc.exists ? doc : null;
   }
 
   static async update(taskId, data) {

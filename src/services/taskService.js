@@ -36,10 +36,11 @@ export default class TaskService {
 
   // for pagination returns a snapshot
   async fetchTaskDocByUid(uid) {
-    const docRef = Task.collection().doc(uid)
-    const snapshot = await docRef.get()
-    console.log(snapshot)
-    return snapshot.exists ? snapshot : null
+    const task = await Task.findById(uid)
+    // const docRef = Task.collection().doc(uid)
+    // const snapshot = await docRef.get()
+    console.log(task)
+    return task.exists ? task : null
   }
 
   // for assigning task
