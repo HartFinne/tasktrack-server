@@ -14,7 +14,7 @@ export const TaskController = (taskService) => {
     // get all tasks
     getAllTasks: async (req, res) => {
       try {
-        const limit = parseInt(req.query.limit) || 5;
+        const limit = parseInt(req.query.limit) || null;
         const lastUid = req.query.lastUid || null;
 
         let lastDoc = null
@@ -39,7 +39,7 @@ export const TaskController = (taskService) => {
     getTasksAssignedToUser: async (req, res) => {
       try {
         const { uid } = req.user
-        const limit = parseInt(req.query.limit) || 5;
+        const limit = parseInt(req.query.limit) || null;
         const lastUid = req.query.lastUid || null;
 
 

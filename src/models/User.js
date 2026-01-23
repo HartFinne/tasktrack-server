@@ -46,11 +46,11 @@ export default class User {
 
   // get all users from the collection
   static async getAll(limit, lastDoc) {
-    let query = User.collection().orderBy("createdAt").limit(limit)
+    let query = User.collection().orderBy("createdAt")
 
-    if (lastDoc) {
-      query = query.startAfter(lastDoc)
-    }
+    if (limit) query = query.limit(limit)
+    if (lastDoc) query = query.startAfter(lastDoc)
+
 
     const snapshot = await query.get()
 

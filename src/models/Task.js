@@ -31,24 +31,23 @@ export default class Task {
   }
 
   static async getAll(limit, lastDoc) {
-    let query = Task.collection().orderBy("createdAt").limit(limit)
 
-    if (lastDoc) {
-      query = query.startAfter(lastDoc)
-    }
+    let query = Task.collection().orderBy("createdAt");
 
-    const snapshot = await query.get()
+    if (limit) query = query.limit(limit);
 
+    if (lastDoc) query = query.startAfter(lastDoc);
 
-    const tasks = []
+    const snapshot = await query.get();
+
+    const tasks = [];
     snapshot.forEach(doc => {
-      console.log(doc.data)
-      tasks.push(new Task({ uid: doc.id, ...doc.data() }))
-    })
+      tasks.push(new Task({ uid: doc.id, ...doc.data() })); // 
+    });
 
-    const lastVisible = snapshot.docs[snapshot.docs.length - 1] || null
+    const lastVisible = snapshot.docs[snapshot.docs.length - 1] || null;
 
-    return { tasks, lastVisible }
+    return { tasks, lastVisible };
   }
 
 

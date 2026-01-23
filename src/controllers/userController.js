@@ -29,7 +29,7 @@ export const UserController = (userService) => {
     // 
     getAllUsers: async (req, res) => {
       try {
-        const limit = parseInt(req.query.limit) || 5;
+        const limit = parseInt(req.query.limit) || null;
         const lastUid = req.query.lastUid || null;
 
         let lastDoc = null
