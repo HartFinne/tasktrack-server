@@ -62,17 +62,27 @@ export default class Task {
   }
 
 
-  static async findTasksByAssignedUser(uid) {
-    const snapshot = await Task.collection()
+  static async findTasksByAssignedUser(uid, limit, lastDoc) {
+
+    let query = Task.collection()
       .where("assignedTo", "==", uid)
-      .orderBy("createdAt", "desc")
-      .get()
+      .orderBy("createdAt", "asc")
+      .limit(limit)
+
+    if (lastDoc) {
+      query = query.startAfter(lastDoc)
+    }
+
+    const snapshot = await query.get()
 
     const tasks = []
     snapshot.forEach(doc => {
       tasks.push(new Task({ uid: doc.id, ...doc.data() }))
     })
 
-    return tasks
+    const lastVisible = snapshot.docs[snapshot.docs.length - 1] || null
+
+    return { tasks, lastVisible }
   }
 }
+

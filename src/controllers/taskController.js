@@ -34,6 +34,33 @@ export const TaskController = (taskService) => {
       }
     },
 
+
+    // get the user tasks
+    getTasksAssignedToUser: async (req, res) => {
+      try {
+        const { uid } = req.user
+        const limit = parseInt(req.query.limit) || 5;
+        const lastUid = req.query.lastUid || null;
+
+
+        let lastDoc = null
+        if (lastUid) {
+          lastDoc = await taskService.fetchTaskDocByUid(lastUid)
+        }
+
+        const { tasks, lastVisible } = await taskService.fetchTasksAssignedToUser(uid, limit, lastDoc)
+
+
+        return res.status(200).json({
+          uid,
+          tasks,
+          lastUid: lastVisible ? lastVisible.id : null
+        })
+      } catch (error) {
+        return res.status(500).json({ message: error.message })
+      }
+    },
+
     // assign someone to a task
     assignTask: async (req, res) => {
       const { taskId } = req.params
@@ -52,21 +79,6 @@ export const TaskController = (taskService) => {
         })
       } catch (error) {
         return res.status(400).json({ message: error.message })
-      }
-    },
-
-    // get the user tasks
-    getTasksAssignedToUser: async (req, res) => {
-      try {
-        const { uid } = req.user
-
-        console.log(uid)
-
-        const tasks = await taskService.getTasksAssignedToUser(uid)
-
-        return res.status(200).json({ tasks })
-      } catch (error) {
-        return res.status(500).json({ message: error.message })
       }
     },
 
