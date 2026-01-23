@@ -89,6 +89,8 @@ export const TaskController = (taskService) => {
         const { status } = req.body
         const { uid } = req.user
 
+        console.log(uid)
+
         const task = await taskService.updateTaskStatus({
           taskId,
           status,

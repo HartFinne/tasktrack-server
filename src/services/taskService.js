@@ -88,15 +88,16 @@ export default class TaskService {
       throw new Error("Invalid task status")
     }
 
-    const task = await Task.findById(taskId)
-    if (!task) {
-      throw new Error("Task not found")
+    const taskSnapshot = await Task.findById(taskId);
+    if (!taskSnapshot) {
+      throw new Error("Task not found");
     }
 
-    if (task.assignedTo !== uid) {
-      throw new Error("You can only update your own task")
-    }
+    const taskData = taskSnapshot.data();
 
+    if (taskData.assignedTo !== uid) {
+      throw new Error("You can only update your own task");
+    }
 
     await Task.update(taskId, { status })
 
