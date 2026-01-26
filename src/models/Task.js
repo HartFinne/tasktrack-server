@@ -15,8 +15,6 @@ export default class Task {
     return db.collection("tasks")
   }
 
-
-
   // save this to the task collection
   async save() {
     await Task.collection().doc().set({
@@ -30,26 +28,30 @@ export default class Task {
     return this
   }
 
-  static async getAll(limit, lastDoc) {
+  static async fetchTasks({ uid = null, status = null, limit = null, lastDoc = null }) {
+    let query = Task.collection();
 
-    let query = Task.collection().orderBy("createdAt");
+    if (uid) {
+      query = query.where("assignedTo", "==", uid);
+    }
+
+    if (status && status !== "all") {
+      query = query.where("status", "==", status);
+    }
+
+    query = query.orderBy("createdAt", "asc");
 
     if (limit) query = query.limit(limit);
-
     if (lastDoc) query = query.startAfter(lastDoc);
 
     const snapshot = await query.get();
 
     const tasks = [];
-    snapshot.forEach(doc => {
-      tasks.push(new Task({ uid: doc.id, ...doc.data() })); // 
-    });
-
+    snapshot.forEach(doc => tasks.push(new Task({ uid: doc.id, ...doc.data() })));
     const lastVisible = snapshot.docs[snapshot.docs.length - 1] || null;
 
     return { tasks, lastVisible };
   }
-
 
   static async findById(taskId) {
     const doc = await Task.collection().doc(taskId).get();
@@ -60,38 +62,5 @@ export default class Task {
     return Task.collection().doc(taskId).update(data);
   }
 
-
-  static async findTasksByAssignedUser(uid, limit, lastDoc, status) {
-
-    let query = Task.collection()
-      .where("assignedTo", "==", uid)
-
-    // ✅ status filter must come BEFORE orderBy & startAfter
-    if (status && status !== "all") {
-      query = query.where("status", "==", status);
-    }
-
-    // order AFTER all where clauses
-    query = query.orderBy("createdAt", "asc");
-
-    if (limit) {
-      query = query.limit(limit);
-    }
-
-    if (lastDoc) {
-      query = query.startAfter(lastDoc)
-    }
-
-    const snapshot = await query.get()
-
-    const tasks = []
-    snapshot.forEach(doc => {
-      tasks.push(new Task({ uid: doc.id, ...doc.data() }))
-    })
-
-    const lastVisible = snapshot.docs[snapshot.docs.length - 1] || null
-
-    return { tasks, lastVisible }
-  }
 }
 

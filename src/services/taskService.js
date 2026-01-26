@@ -31,7 +31,7 @@ export default class TaskService {
   }
 
   async fetchAllTasks(limit, lastDoc) {
-    return await Task.getAll(limit, lastDoc)
+    return await Task.fetchTasks({ limit, lastDoc })
   }
 
   // for pagination returns a snapshot
@@ -73,7 +73,7 @@ export default class TaskService {
       throw new Error("User not authenticated")
     }
 
-    return Task.findTasksByAssignedUser(uid, limit, lastDoc, status)
+    return Task.fetchTasks({ uid, limit, lastDoc, status })
   }
 
 
