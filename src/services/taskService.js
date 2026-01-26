@@ -68,12 +68,12 @@ export default class TaskService {
   }
 
   //
-  async fetchTasksAssignedToUser(uid, limit, lastDoc) {
+  async fetchTasksAssignedToUser(uid, limit, lastDoc, status) {
     if (!uid) {
       throw new Error("User not authenticated")
     }
 
-    return Task.findTasksByAssignedUser(uid, limit, lastDoc)
+    return Task.findTasksByAssignedUser(uid, limit, lastDoc, status)
   }
 
 

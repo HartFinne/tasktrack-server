@@ -34,21 +34,22 @@ export const TaskController = (taskService) => {
       }
     },
 
-
     // get the user tasks
     getTasksAssignedToUser: async (req, res) => {
       try {
         const { uid } = req.user
         const limit = parseInt(req.query.limit) || null;
         const lastUid = req.query.lastUid || null;
+        const status = req.query.status || null
 
+        console.log("status: ", status)
 
         let lastDoc = null
         if (lastUid) {
           lastDoc = await taskService.fetchTaskDocByUid(lastUid)
         }
 
-        const { tasks, lastVisible } = await taskService.fetchTasksAssignedToUser(uid, limit, lastDoc)
+        const { tasks, lastVisible } = await taskService.fetchTasksAssignedToUser(uid, limit, lastDoc, status)
 
 
         return res.status(200).json({

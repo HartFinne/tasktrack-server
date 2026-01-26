@@ -61,12 +61,22 @@ export default class Task {
   }
 
 
-  static async findTasksByAssignedUser(uid, limit, lastDoc) {
+  static async findTasksByAssignedUser(uid, limit, lastDoc, status) {
 
     let query = Task.collection()
       .where("assignedTo", "==", uid)
-      .orderBy("createdAt", "asc")
-      .limit(limit)
+
+    // ✅ status filter must come BEFORE orderBy & startAfter
+    if (status && status !== "all") {
+      query = query.where("status", "==", status);
+    }
+
+    // order AFTER all where clauses
+    query = query.orderBy("createdAt", "asc");
+
+    if (limit) {
+      query = query.limit(limit);
+    }
 
     if (lastDoc) {
       query = query.startAfter(lastDoc)
