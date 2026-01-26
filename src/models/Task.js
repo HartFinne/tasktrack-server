@@ -62,5 +62,28 @@ export default class Task {
     return Task.collection().doc(taskId).update(data);
   }
 
+  static async fetchCountTasks({ uid = null } = {}) {
+    const statuses = ["backlog", "in_progress", "done"];
+    const counts = {};
+
+    // Count all tasks (no status filter)
+    let baseQuery = Task.collection();
+    if (uid) baseQuery = baseQuery.where("assignedTo", "==", uid);
+    const allSnapshot = await baseQuery.count().get();
+    counts.all = allSnapshot.data().count || 0;
+
+    // Count per status
+    for (const status of statuses) {
+      let query = Task.collection();
+      if (uid) query = query.where("assignedTo", "==", uid);
+      query = query.where("status", "==", status);
+
+      const snapshot = await query.count().get();
+      counts[status] = snapshot.data().count || 0;
+    }
+
+    return counts;
+  }
+
 }
 

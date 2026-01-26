@@ -11,6 +11,18 @@ export const TaskController = (taskService) => {
       }
     },
 
+    // admin
+    getAllCountTasks: async (req, res) => {
+      try {
+
+        const totalTasks = await taskService.fetchAllCountTasks()
+        return res.status(200).json({ totalTasks })
+      } catch (error) {
+        console.error("Error fetching tasks", error)
+        return res.status(500).json({ message: error.message })
+      }
+    },
+
     // get all tasks
     getAllTasks: async (req, res) => {
       try {

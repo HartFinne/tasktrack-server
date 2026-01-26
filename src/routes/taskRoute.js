@@ -28,4 +28,6 @@ router.get("/tasks/my", authMiddleware, taskController.getTasksAssignedToUser)
 // this route to update the status of a task
 router.put("/tasks/:taskId/status", authMiddleware, taskController.updateTaskStatus)
 
+router.get("/tasks/count", authMiddleware, taskController.getAllCountTasks)
+
 export default router;

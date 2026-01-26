@@ -30,6 +30,11 @@ export default class TaskService {
     return await task.save()
   }
 
+  // admin function
+  async fetchAllCountTasks() {
+    return await Task.fetchCountTasks({})
+  }
+
   async fetchAllTasks(limit, lastDoc) {
     return await Task.fetchTasks({ limit, lastDoc })
   }
