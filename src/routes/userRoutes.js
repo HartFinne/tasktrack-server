@@ -19,4 +19,6 @@ router.get("/me", authMiddleware, userController.getUserByID)
 
 router.get("/users", authMiddleware, adminMiddleware, userController.getAllUsers)
 
+router.get("/count", authMiddleware, userController.getAllCountTasks)
+
 export default router;

@@ -65,5 +65,10 @@ export default class User {
 
   }
 
+  //
+  static async fetchCountUsers() {
+    const snapshot = await User.collection().count().get();
+    return snapshot.data().count;
+  }
 
 }

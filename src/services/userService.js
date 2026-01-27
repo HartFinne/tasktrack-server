@@ -32,4 +32,8 @@ export default class UserService {
     console.log(snapshot)
     return snapshot.exists ? snapshot : null
   }
+
+  async fetchAllCountUsers() {
+    return await User.fetchCountUsers()
+  }
 }
