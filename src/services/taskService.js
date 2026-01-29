@@ -35,8 +35,8 @@ export default class TaskService {
     return await Task.fetchCountTasks({})
   }
 
-  async fetchAllTasks(limit, lastDoc) {
-    return await Task.fetchTasks({ limit, lastDoc })
+  async fetchAllTasks(limit, lastDoc, status) {
+    return await Task.fetchTasks({ limit, lastDoc, status })
   }
 
   // for pagination returns a snapshot

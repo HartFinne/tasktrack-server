@@ -28,17 +28,19 @@ export const TaskController = (taskService) => {
       try {
         const limit = parseInt(req.query.limit) || null;
         const lastUid = req.query.lastUid || null;
+        const status = req.query.status || null
 
         let lastDoc = null
         if (lastUid) {
           lastDoc = await taskService.fetchTaskDocByUid(lastUid)
         }
 
-        const { tasks, lastVisible } = await taskService.fetchAllTasks(limit, lastDoc)
+        const { tasks, lastVisible, hasNext } = await taskService.fetchAllTasks(limit, lastDoc, status)
 
         return res.status(200).json({
           tasks,
-          lastUid: lastVisible ? lastVisible.id : null
+          lastUid: lastVisible ? lastVisible.id : null,
+          hasNext
         })
       } catch (error) {
         console.error("Error fetching tasks", error)

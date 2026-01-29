@@ -31,6 +31,7 @@ export const UserController = (userService) => {
       try {
         const limit = parseInt(req.query.limit) || null;
         const lastUid = req.query.lastUid || null;
+        const role = req.query.role || null
 
         let lastDoc = null
 
@@ -38,12 +39,13 @@ export const UserController = (userService) => {
           lastDoc = await userService.fetchUserDocByUid(lastUid)
         }
 
-        const { users, lastVisible } = await userService.fetchAllUsers(limit, lastDoc)
+        const { users, lastVisible, hasNext } = await userService.fetchAllUsers({ limit, lastDoc, role })
 
 
         return res.status(200).json({
           users,
-          lastUid: lastVisible ? lastVisible.id : null
+          lastUid: lastVisible ? lastVisible.id : null,
+          hasNext
         })
       } catch (error) {
         console.error("Error fetching users: ", error)

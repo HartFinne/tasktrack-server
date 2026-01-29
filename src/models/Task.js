@@ -41,17 +41,28 @@ export default class Task {
 
     query = query.orderBy("createdAt", "asc");
 
-    if (limit) query = query.limit(limit);
+    // Ask for one extra record
+    query = query.limit(Number(limit) + 1);
+
     if (lastDoc) query = query.startAfter(lastDoc);
 
     const snapshot = await query.get();
 
-    const tasks = [];
-    snapshot.forEach(doc => tasks.push(new Task({ uid: doc.id, ...doc.data() })));
-    const lastVisible = snapshot.docs[snapshot.docs.length - 1] || null;
+    const docs = snapshot.docs;
+    let hasNext = false;
 
-    return { tasks, lastVisible };
+    // If more than limit, there is another page
+    if (docs.length > limit) {
+      hasNext = true;
+      docs.pop(); // remove extra doc
+    }
+
+    const tasks = docs.map(doc => new Task({ uid: doc.id, ...doc.data() }));
+    const lastVisible = docs.length ? docs[docs.length - 1] : null;
+
+    return { tasks, lastVisible, hasNext };
   }
+
 
   static async findById(taskId) {
     const doc = await Task.collection().doc(taskId).get();

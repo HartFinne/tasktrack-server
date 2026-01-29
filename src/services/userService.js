@@ -21,8 +21,8 @@ export default class UserService {
 
 
   // fetch all users
-  async fetchAllUsers(limit, lastDoc) {
-    return await User.getAll(limit, lastDoc)
+  async fetchAllUsers({ limit, lastDoc, role }) {
+    return await User.getAll({ limit, lastDoc, role })
   }
 
   // for pagination returns a snapshot

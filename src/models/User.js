@@ -20,11 +20,6 @@ export default class User {
     return new User(data)
   }
 
-  // create a delete for user
-
-  // create a update for user
-
-  // create 1 user data
   // save user (fails if exists)
   async saveIfNotExists() {
     const docRef = User.collection().doc(this.uid);
@@ -45,23 +40,30 @@ export default class User {
   }
 
   // get all users from the collection
-  static async getAll(limit, lastDoc) {
-    let query = User.collection().orderBy("createdAt")
+  static async getAll({ limit, lastDoc, role }) {
+    let query = User.collection()
 
-    if (limit) query = query.limit(limit)
+    if (role && role !== "all") query = query.where("role", "==", role)
+
+    query = query.orderBy("createdAt", "asc")
+
+    if (limit) query = query.limit(Number(limit) + 1)
     if (lastDoc) query = query.startAfter(lastDoc)
 
-
     const snapshot = await query.get()
+    const docs = snapshot.docs
+    let hasNext = false
 
-    const users = []
-    snapshot.forEach(doc => {
-      users.push(new User({ uid: doc.id, ...doc.data() }))
-    })
+    if (docs.length > limit) {
+      hasNext = true
+      docs.pop()
+    }
 
-    const lastVisible = snapshot.docs[snapshot.docs.length - 1] || null
+    const users = docs.map(doc => new User({ uid: doc.id, ...doc.data() }))
 
-    return { users, lastVisible }
+    const lastVisible = docs.length ? docs[docs.length - 1] : null
+
+    return { users, lastVisible, hasNext }
 
   }
 
